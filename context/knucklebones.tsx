@@ -30,6 +30,7 @@ function Provider({children}){
         null,
         null,
       ]);
+      const [score, setScore] = useState<any>();
 
     const handleOnDiceClick = (number) => {
         setDiceNumber(number);
@@ -41,6 +42,14 @@ function Provider({children}){
         setDiceThrowed(false);
         setFieldStatus(playerTurn,diceNumber,fieldIndex)
       };
+    
+    const endGame =(player2, player1) =>{
+      let player2Score = calculateScore(player2);
+      let player1Score = calculateScore(player1);
+
+      setScore({ player2Score, player1Score });
+      setGameEnded(true);
+    }
 
 
     const setFieldStatus = (type, number, id) => {
@@ -82,7 +91,7 @@ function Provider({children}){
             (x) => x != null
           ).length;
           if (player2FieldsTaken === 9)
-            setGameEnded(true);
+            endGame(updatedPlayer2Field, updatedField);
     
     
         } else {
@@ -123,9 +132,28 @@ function Provider({children}){
           const enemyFieldsTaken = updatedPlayer2Field.filter((x) => x != null).length;
     
           if (enemyFieldsTaken === 9)
-              setGameEnded(true);
+              endGame(updatedPlayer2Field, updatedField);
         }
       };
+
+      const calculateScore = (player) =>{
+        let playerScore = 0;
+        for (let i = 0; i <= 2; i++) {
+          if (player[0 + i] === player[3 + i] && player[6 + i] === player[3 + i]) {
+            playerScore = playerScore + player[0 + i] * 3 * 3;
+          } else if (player[0 + i] === player[3 + i] && player[0 + i] !== null) {
+            playerScore = playerScore + player[0 + i] * 2 * 2 + player[6 + 1];
+          } else if (player[3 + i] === player[6 + i] && player[3 + i] !== null) {
+            playerScore = playerScore + player[3 + i] * 2 * 2 + player[0 + 1];
+          } else if (player[6 + i] === player[0 + i] && player[6 + i] !== null) {
+            playerScore = playerScore + player[6 + i] * 2 * 2 + player[3 + 1];
+          } else {
+            playerScore = playerScore + player[0 + i] + player[3 + i] + player[6 + i];
+          }
+        }
+    
+        return playerScore
+      }
 
     return(
         <KnucklebonesContext.Provider value={{
@@ -141,7 +169,8 @@ function Provider({children}){
             gameEnded,
             setGameEnded,
             handleOnDiceClick,
-            handleOnFieldClick
+            handleOnFieldClick,
+            score
         }}>
             {children}
         </KnucklebonesContext.Provider>

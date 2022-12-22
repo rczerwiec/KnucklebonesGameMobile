@@ -12,10 +12,23 @@ import { KnucklebonesContext } from "../context/knucklebones";
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
-  const {diceThrowed,diceNumber, playerTurn, gameEnded, playerFieldsStatus, player2FieldsStatus} = useContext(KnucklebonesContext)
+  const {diceThrowed,diceNumber, playerTurn, gameEnded, playerFieldsStatus, player2FieldsStatus, score} = useContext(KnucklebonesContext)
 
   let content;
   if (diceThrowed) {
+
+    let result;
+    if(gameEnded){
+      
+      let text = score.player1Score>score.player2Score ? ("Player 1 Won!"):("Player 2 Won!"); 
+      result = (
+        <View>
+          <Text>{text}</Text>
+          <Text>{score.player2Score}-{score.player1Score}</Text>
+        </View>
+      )
+    }
+
     content = (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text>Player 1</Text>
@@ -42,7 +55,7 @@ export default function TabOneScreen({
             }}
           />
         </View>
-        {playerTurn && gameEnded===false ? (<Text>Player 1 Turn:{diceNumber}</Text>): (!gameEnded  ?(<Text>Player 2 Turn:{diceNumber}</Text>) :(<Text>Game Over</Text>))}
+        {playerTurn && gameEnded===false ? (<Text>Player 1 Turn | Dice Value:{diceNumber}</Text>): (!gameEnded  ?(<Text>Player 2 Turn | Dice Value:{diceNumber}</Text>) :(result))}
         <View
           style={{
             display: "flex",
@@ -78,6 +91,7 @@ export default function TabOneScreen({
       </View>
     );
   }
+
 
   return <View style={{ alignItems: "center" }}>{content}</View>;
 }
