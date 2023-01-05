@@ -8,25 +8,38 @@ import Dice from "../components/Dice";
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import { KnucklebonesContext } from "../context/knucklebones";
+import SingleDiceField from "../components/SingleDiceField";
+import TurnScreen from "../components/TurnScreen";
 
 export default function TabOneScreen({
   navigation,
 }: RootTabScreenProps<"TabOne">) {
-  const {diceThrowed,diceNumber, playerTurn, gameEnded, playerFieldsStatus, player2FieldsStatus, score} = useContext(KnucklebonesContext)
+  const {
+    diceThrowed,
+    diceNumber,
+    playerTurn,
+    gameEnded,
+    playerFieldsStatus,
+    player2FieldsStatus,
+    score,
+  } = useContext(KnucklebonesContext);
 
   let content;
   if (diceThrowed) {
-
     let result;
-    if(gameEnded){
-      
-      let text = score.player1Score>score.player2Score ? ("Player 1 Won!"):("Player 2 Won!"); 
+    if (gameEnded) {
+      let text =
+        score.player1Score > score.player2Score
+          ? "Player 1 Won!"
+          : "Player 2 Won!";
       result = (
         <View>
           <Text>{text}</Text>
-          <Text>{score.player2Score}-{score.player1Score}</Text>
+          <Text>
+            {score.player2Score}-{score.player1Score}
+          </Text>
         </View>
-      )
+      );
     }
 
     content = (
@@ -40,7 +53,7 @@ export default function TabOneScreen({
           }}
         >
           <FlatGrid
-            itemDimension={80}
+            itemDimension={70}
             data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
             renderItem={({ item }) => {
               const id = "player1" + item;
@@ -48,14 +61,20 @@ export default function TabOneScreen({
                 <Field
                   key={id}
                   fieldType={true}
-                  index={item-1}
+                  index={item - 1}
                   fields={playerFieldsStatus}
                 />
               );
             }}
           />
         </View>
-        {playerTurn && gameEnded===false ? (<Text>Player 1 Turn | Dice Value:{diceNumber}</Text>): (!gameEnded  ?(<Text>Player 2 Turn | Dice Value:{diceNumber}</Text>) :(result))}
+        {playerTurn && gameEnded === false ? (
+          <TurnScreen diceNumber={diceNumber} playerTurn="Player 1" />
+        ) : !gameEnded ? (
+          <TurnScreen diceNumber={diceNumber} playerTurn="Player 2" />
+        ) : (
+          result
+        )}
         <View
           style={{
             display: "flex",
@@ -73,7 +92,7 @@ export default function TabOneScreen({
                 <Field
                   key={id}
                   fieldType={false}
-                  index={item-1}
+                  index={item - 1}
                   fields={player2FieldsStatus}
                 />
               );
@@ -87,11 +106,10 @@ export default function TabOneScreen({
     content = (
       <View>
         <Text>Throw a dice</Text>
-        <Dice/>
+        <Dice />
       </View>
     );
   }
-
 
   return <View style={{ alignItems: "center" }}>{content}</View>;
 }
