@@ -2,14 +2,14 @@ import { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import { FlatGrid } from "react-native-super-grid";
 
-import EditScreenInfo from "../components/EditScreenInfo";
-import Field from "../components/Field";
-import Dice from "../components/Dice";
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-import { KnucklebonesContext } from "../context/knucklebones";
-import SingleDiceField from "../components/SingleDiceField";
-import TurnScreen from "../components/TurnScreen";
+import Field from "../../components/Field";
+import Dice from "../../components/Dice";
+import { Text, View } from "../../components/Themed";
+import { RootTabScreenProps } from "../../types";
+import { KnucklebonesContext } from "../../context/knucklebones";
+import SingleDiceField from "../../components/SingleDiceField";
+import TurnScreen from "../../components/TurnScreen";
+import ThrowDice from "./ThrowDice";
 
 export default function TabOneScreen({
   navigation,
@@ -103,12 +103,7 @@ export default function TabOneScreen({
       </View>
     );
   } else {
-    content = (
-      <View>
-        <Text>Throw a dice</Text>
-        <Dice />
-      </View>
-    );
+    content = <ThrowDice/>
   }
 
   return <View style={{ alignItems: "center" }}>{content}</View>;
